@@ -26,10 +26,10 @@ Waldorf recursively scans folders, collects file metadata, and generates storage
   - Long file paths
   - I/O errors
 - Configurable ignored directories
+- Standard deviation analysis of file sizes
 
 ### In Progress
 
-- Standard deviation analysis of file sizes
 - Duplicate file detection using SHA-256 hashing
 - ZIP archive generation
 - Archive filtering by size and age
@@ -42,14 +42,15 @@ Waldorf recursively scans folders, collects file metadata, and generates storage
 ## Example Output
 
 ```text
-Total Files: 154
-Total Size: 104857600
-Average Size: 680893.51
+Total Files: 11
+Total Size: 1844.11 MB
+Average Size: 167.65 MB
+Standard Deviation: 526.74 MB
 
-.txt: 45 files (29.22%)
-.pdf: 20 files (12.99%)
-.cs: 17 files (11.04%)
-.jpg: 10 files (6.49%)
+.pdf: 7 files (63.64%)
+.mp4: 1 files (9.09%)
+.DS_Store: 1 files (9.09%)
+.docx: 2 files (18.18%)
 ```
 
 ---
