@@ -1,56 +1,64 @@
 # Waldorf
 
-A command-line directory analyzer and archiver written in C# and .NET.
+A command-line directory analysis tool written in C# and .NET.
 
-Waldorf recursively scans folders, collects file metadata, and generates storage analytics to help users understand the contents of large directory structures.
+Waldorf recursively scans directory structures, collects file metadata, generates storage analytics, and identifies duplicate files using SHA-256 content hashing.
 
 ---
 
 ## Features
 
-### Completed
+### File System Scanning
 
-- Recursive directory traversal
-- File metadata collection
-  - File name
-  - Full path
-  - File size
-  - File extension
-- Aggregate statistics
-  - Total file count
-  - Total storage usage
-  - Average file size
-- Extension breakdown analysis
-- Exception handling for:
-  - Unauthorized directories
-  - Long file paths
-  - I/O errors
-- Configurable ignored directories
-- Standard deviation analysis of file sizes
+* Recursive directory traversal
+* File metadata collection
 
-### In Progress
+  * File name
+  * Full path
+  * File size
+  * File extension
+* Configurable ignored directories
+* Exception handling for:
 
-- Duplicate file detection using SHA-256 hashing
-- ZIP archive generation
-- Archive filtering by size and age
-- Dry-run mode
-- Spectre.Console terminal UI
-- Progress bars and formatted reports
+  * Unauthorized directories
+  * Long file paths
+  * I/O errors
+
+### Analytics
+
+* Total file count
+* Total storage usage
+* Average file size
+* Standard deviation of file sizes
+* File type distribution analysis
+* Percentage breakdown by extension
+
+### Duplicate Detection
+
+* SHA-256 content hashing
+* Content-based duplicate identification
+* Duplicate grouping independent of file names
 
 ---
 
 ## Example Output
 
 ```text
-Total Files: 11
-Total Size: 1844.11 MB
-Average Size: 167.65 MB
-Standard Deviation: 526.74 MB
+Total Files: 406
+Total Size: 6650.05 MB
+Average Size: 16.38 MB
+Standard Deviation: 172.37 MB
 
-.pdf: 7 files (63.64%)
-.mp4: 1 files (9.09%)
-.DS_Store: 1 files (9.09%)
-.docx: 2 files (18.18%)
+.pdf: 158 files (38.92%)
+.png: 118 files (29.06%)
+.jpeg: 21 files (5.17%)
+.docx: 4 files (0.99%)
+
+Duplicate Groups Found: 5
+
+Duplicate Set (2 files):
+  /path/to/file1.pdf
+  /path/to/file2.pdf
 ```
 
 ---
@@ -60,7 +68,7 @@ Standard Deviation: 526.74 MB
 Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/waldorf.git
+git clone https://github.com/retinxl/waldorf.git
 cd waldorf
 ```
 
@@ -84,76 +92,63 @@ dotnet run "/Users/bianca/Documents"
 
 Stores information about each discovered file:
 
-- Name
-- Path
-- Size
-- Extension
+* Name
+* Path
+* Size
+* Extension
+
+### DuplicateGroup
+
+Stores files that share the same SHA-256 hash.
 
 ### FileScanner
 
 Responsible for:
 
-- Recursive directory traversal
-- File discovery
-- Metadata collection
-- Directory filtering
+* Recursive directory traversal
+* File discovery
+* Metadata collection
+* Directory filtering
+* Filesystem exception handling
 
 ### FileAnalyzer
 
 Responsible for:
 
-- Aggregate statistics
-- Extension grouping
-- Percentage calculations
-- Future analytics features
-
----
-
-## Project Roadmap
-
-### Phase 1 — File System Exploration ✅
-
-- [x] Recursive directory traversal
-- [x] Metadata collection
-- [x] Directory filtering
-- [x] Exception handling
-
-### Phase 2 — Analytics Engine 🚧
-
-- [x] Total file count
-- [x] Total size
-- [x] Average file size
-- [x] Extension breakdown
-- [x] Standard deviation
-- [ ] Duplicate detection
-
-### Phase 3 — Archiving Pipeline
-
-- [ ] ZIP archive generation
-- [ ] Conditional filtering
-- [ ] Dry-run mode
-
-### Phase 4 — CLI UI
-
-- [ ] Spectre.Console integration
-- [ ] Analytics tables
-- [ ] Progress bars
+* Aggregate statistics
+* Standard deviation calculation
+* Extension grouping
+* Percentage calculations
+* SHA-256 hash generation
+* Duplicate file detection
 
 ---
 
 ## Technologies
 
-- C#
-- .NET 8
-- LINQ
-- System.IO
-- SHA-256 Cryptography
-- Spectre.Console (planned)
+* C#
+* .NET
+* LINQ
+* System.IO
+* SHA-256 Cryptography
+* Collections (List, Dictionary, HashSet)
+
+---
+
+## Key Concepts Demonstrated
+
+* Recursive algorithms
+* Object-oriented design
+* File I/O
+* Exception handling
+* Statistical analysis
+* Hash-based duplicate detection
+* Data aggregation and reporting
 
 ---
 
 ## Author
 
-**Bianca Bacchus**
+Bianca Bacchus
 
 B.S. Computer Science, Rensselaer Polytechnic Institute
