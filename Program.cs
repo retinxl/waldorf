@@ -3,6 +3,8 @@ using System.Collections.Generic; //for data structures
 using System.Configuration.Assemblies;
 using System.IO;
 using System.Runtime.CompilerServices; //for directory file tools
+using System.Security.Cryptography;
+using System.Threading.Tasks;
 
 //get user input if not given
 if (args.Length == 0)
@@ -22,18 +24,31 @@ Console.WriteLine($"Total Size: {stats.TotalSizeBytes/mb:F2} MB");
 Console.WriteLine($"Average Size: {stats.AverageFileSize/mb:F2} MB");
 Console.WriteLine($"Standard Deviation: {stats.StandardDeviation/mb:F2} MB");
 FileAnalyzer.PrintExtensionBreakdown(files);
+List<DuplicateGroup> duplicates =
+    FileAnalyzer.FindDuplicates(files);
 
-// print size of files
-/*foreach (FileMetadata file in files)
-{
-    Console.WriteLine($"{file.Name}: {file.Size} bytes");
-}*/
+Console.WriteLine($"\nDuplicate Groups Found: {duplicates.Count}");
 
-// print each file here:
-/*foreach (FileMetadata file in files)
+foreach (DuplicateGroup group in duplicates)
 {
-    Console.WriteLine(file.Path);
-}*/
+    Console.WriteLine(
+        $"\nDuplicate Set ({group.Files.Count} files):");
+
+    foreach (FileMetadata file in group.Files)
+    {
+        Console.WriteLine($"  {file.Path}");
+    }
+}
+
+
+public class DuplicateGroup
+{
+    public string Hash { get; set; } = "";
+    public List<FileMetadata> Files { get; set;} = new();
+}
+
+
+
 
 public class FileMetadata
 {
@@ -216,4 +231,58 @@ public class FileAnalyzer
         }
     }    
 
+    private static string GetFileHash(string filePath)
+    {
+        using var fileStream =
+            new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+
+        byte[] hashBytes = SHA256.HashData(fileStream);
+
+        return Convert.ToHexString(hashBytes);
+    }
+
+    public static List<DuplicateGroup> FindDuplicates(List<FileMetadata> files)
+    {
+        Dictionary<string, List<FileMetadata>> hashGroups =
+            new Dictionary<string, List<FileMetadata>>();
+
+        foreach (FileMetadata file in files)
+        {
+            string hash = GetFileHash(file.Path);
+
+            if (hashGroups.ContainsKey(hash))
+            {
+                hashGroups[hash].Add(file);
+            }
+            else
+            {
+                hashGroups[hash] = new List<FileMetadata>();
+                hashGroups[hash].Add(file);
+            }
+        }
+
+        List<DuplicateGroup> duplicateGroups =
+            new List<DuplicateGroup>();
+
+        foreach (var entry in hashGroups)
+        {
+            if (entry.Value.Count > 1)
+            {
+                duplicateGroups.Add(
+                    new DuplicateGroup
+                    {
+                        Hash = entry.Key,
+                        Files = entry.Value
+                    }
+                );
+            }
+        }
+
+        return duplicateGroups;
+    }
+
+
+
 }
+
+
